@@ -7,7 +7,7 @@ export const userAuthStore = create((set) => ({
     isLoggingIn: false,
     isUpdatingProfile: false,
 
-    isCheckAuthUser: true,
+    isCheckingAuth: true,
 
     checkAuth: async () => {
         try {
@@ -17,7 +17,7 @@ export const userAuthStore = create((set) => ({
             console.log("Error in CheckAuth: ", error);
             set({ authUser: null });
         } finally {
-            set({ isCheckAuthUser: false });
+            set({ isCheckingAuth: false });
         }
     }
 

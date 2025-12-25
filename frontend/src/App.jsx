@@ -1,30 +1,68 @@
-import { Routes, Route } from "react-router-dom"
-import Navbar from "./components/Navbar"
-import SettingsPage from "./pages/SettingsPage"
-import LoginPage from "./pages/LoginPage"
-import SignupPage from "./pages/SignupPage"
-import HomePage from "./pages/HomePage"
-import ProfilePage from "./pages/ProfilePage"
-import { userAuthStore } from "./store/useAuthStore"
-import { useEffect } from "react"
+import { Routes, Route, Navigate } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import SettingsPage from "./pages/SettingsPage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import HomePage from "./pages/HomePage";
+import ProfilePage from "./pages/ProfilePage";
+import { userAuthStore } from "./store/useAuthStore";
+import { useEffect } from "react";
+import { Loader2 } from "lucide-react";
 
 function App() {
 
-  const { authUser, checkAuth } = userAuthStore();
+  const { authUser, checkAuth, isCheckingAuth } = userAuthStore();
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth])
+  console.log(authUser);
+
+  if (isCheckingAuth && !authUser) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="size-14 animate-spin" />
+      </div>
+    )
+  }
 
   return (
     <div>
       <Navbar />
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route
+          path="/"
+          element=
+          {
+            authUser ? <HomePage /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/signup"
+          element=
+          {
+            !authUser ? <SignupPage /> : <Navigate to="/" />
+          }
+        />
+        <Route
+          path="/login"
+          element=
+          {
+            !authUser ? <LoginPage /> : <Navigate to="/" />
+
+          }
+        />
+        <Route
+          path="/settings"
+          element={<SettingsPage />}
+        />
+        <Route
+          path="/profile"
+          element=
+          {
+            authUser ? <ProfilePage /> : <Navigate to="/login" />
+          }
+        />
       </Routes>
     </div>
   )
