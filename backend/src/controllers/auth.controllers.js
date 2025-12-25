@@ -1,6 +1,7 @@
 import { User } from "../models/users.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import cloudinary from "../lib/cloudinary.js";
 
 export const registerUser = async (req, res) => {
     try {
@@ -70,7 +71,7 @@ export const loginUser = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(401).json({
+            return res.status(404).json({
                 success: false,
                 message: "User not found!"
             });
@@ -129,10 +130,41 @@ export const logoutUser = (req, res) => {
 
 export const updateProfile = async () => {
     try {
-        
+        const { profilePicture } = req.body;
+        const userId = req.user._id;
+
+        if (!profilePicture) {
+            return res.status(404).json({
+                success: false,
+                message: "Profile Picture is required!"
+            });
+        }
+
+        const uploadResponse = await cloudinary.uploader.upload(profilePicture);
+
+        const updatedUser = await User.findByIdAndUpdate(userId, { profilePicture: uploadResponse.secure_url }, { new: true });
+
+        return res.status(200).json({
+            success: true,
+            message: `${req.user.fullname}'s Profile updated successfully!`,
+            updatedUser
+        });
+
     } catch (error) {
         console.log("Failed to Update Profile \n", error);
         return res.status(500).json({
+            success: false,
+            message: "Internal Server Error!" 
+        });
+    }
+}
+
+export const checkAuth = (req, res) => {
+    try {
+        res.status(200).json(req.user);
+    } catch (error) {
+        console.log("Error in checkAuth controller", error.message);
+        res.status(500).json({
             success: false,
             message: "Internal Server Error!"
         });
