@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth.routes.js";
 import messageRoutes from "./routes/message.routes.js";
 import connectDB from "./config/db.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 // dotenv config
 if (process.env.NODE_ENV !== "production") {
@@ -16,6 +17,12 @@ connectDB();
 // App Initialization
 const app = express();
 const PORT = process.env.PORT || 5005;
+
+// CORS Setup
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
 
 // Default Middlewares
 app.use(express.json());

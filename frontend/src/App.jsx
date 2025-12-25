@@ -5,8 +5,16 @@ import LoginPage from "./pages/LoginPage"
 import SignupPage from "./pages/SignupPage"
 import HomePage from "./pages/HomePage"
 import ProfilePage from "./pages/ProfilePage"
+import { userAuthStore } from "./store/useAuthStore"
+import { useEffect } from "react"
 
 function App() {
+
+  const { authUser, checkAuth } = userAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth])
 
   return (
     <div>
