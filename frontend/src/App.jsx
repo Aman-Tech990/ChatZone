@@ -5,13 +5,13 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
-import { userAuthStore } from "./store/useAuthStore";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
+import { useAuthStore } from "./store/useAuthStore";
 
 function App() {
 
-  const { authUser, checkAuth, isCheckingAuth } = userAuthStore();
+  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
@@ -68,4 +68,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
