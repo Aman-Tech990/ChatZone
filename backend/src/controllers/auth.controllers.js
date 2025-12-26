@@ -2,6 +2,7 @@ import { User } from "../models/users.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import cloudinary from "../lib/cloudinary.js";
+import { generateToken } from "../lib/utils.js";
 
 export const registerUser = async (req, res) => {
     try {
@@ -30,7 +31,7 @@ export const registerUser = async (req, res) => {
 
         const hashPassword = await bcrypt.hash(password, 10);
 
-        const newUser = await User.create({
+        const newUser = new User({
             fullname,
             email,
             password: hashPassword,
@@ -43,11 +44,21 @@ export const registerUser = async (req, res) => {
             profilePicture: newUser?.profilePicture
         }
 
-        return res.status(201).json({
-            success: true,
-            message: "User registered successfully!",
-            user: userResponse
-        });
+        if (newUser) {
+            generateToken(newUser._id, res);
+            await newUser.save();
+
+            return res.status(201).json({
+                success: true,
+                message: "User registered successfully!",
+                user: userResponse
+            });
+        } else {
+            res.status(400).json({
+                success: false,
+                message: "Invalid user data!"
+            });
+        }
 
     } catch (error) {
         console.log("User failed to register \n", error);
@@ -92,10 +103,9 @@ export const loginUser = async (req, res) => {
             profilePicture: user?.profilePicture,
         }
 
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+        generateToken(user._id, res);
 
         return res
-            .cookie("token", token, { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true })
             .json({
                 success: true,
                 message: `Welcome back ${user.fullname}!`,
@@ -115,6 +125,7 @@ export const logoutUser = (req, res) => {
     try {
         res
             .cookie("token", "", { maxAge: 0 })
+            .status(200)
             .json({
                 success: true,
                 message: "Logged out successfully!"
@@ -154,7 +165,7 @@ export const updateProfile = async () => {
         console.log("Failed to Update Profile \n", error);
         return res.status(500).json({
             success: false,
-            message: "Internal Server Error!" 
+            message: "Internal Server Error!"
         });
     }
 }
