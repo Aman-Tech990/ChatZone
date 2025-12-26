@@ -8,6 +8,7 @@ import ProfilePage from "./pages/ProfilePage";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { useAuthStore } from "./store/useAuthStore";
+import { Toaster } from "react-hot-toast";
 
 function App() {
 
@@ -64,6 +65,8 @@ function App() {
           }
         />
       </Routes>
+
+      <Toaster />
     </div>
   )
 }

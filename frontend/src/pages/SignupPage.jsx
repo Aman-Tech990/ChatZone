@@ -1,22 +1,37 @@
 import React, { useState } from 'react';
 import { useAuthStore } from '../store/useAuthStore';
-import { Eye, EyeOff, Lock, Mail, MessageSquare, User, User2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, User, User2 } from 'lucide-react';
+import { Link } from "react-router-dom";
+import AuthImagePattern from '../components/AuthImagePattern';
+import toast from 'react-hot-toast';
 
 
 const SignupPage = () => {
 
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
-        fullName: "",
+        fullname: "",
         email: "",
         password: ""
     });
     const { signup, isSigningUp } = useAuthStore();
 
-    const validateForm = () => { }
+    const validateForm = () => {
+        if (!formData.fullname.trim()) return toast.error("Fullname is required!");
+        if (!formData.email.trim()) return toast.error("Email is required!");
+        if (!formData.password.trim()) return toast.error("Password is required!");
+        if (formData.password.length < 6) return toast.error("Password must be of atleast 6 characters!");
+
+        return true;
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log(formData);
+
+        const success = validateForm();
+
+        if (success) signup(formData);
     }
 
     return (
@@ -55,9 +70,9 @@ const SignupPage = () => {
                                     type="text"
                                     className="input input-bordered w-full pl-10 focus-visible:ring-0"
                                     placeholder="Eg.: Aman Parida"
-                                    value={formData.fullName}
+                                    value={formData.fullname}
                                     onChange={(e) =>
-                                        setFormData({ ...formData, fullName: e.target.value })
+                                        setFormData({ ...formData, fullname: e.target.value })
                                     }
                                 />
                             </div>
@@ -120,11 +135,37 @@ const SignupPage = () => {
                             </div>
                         </div>
 
+                        <button
+                            type='submit'
+                            className='btn btn-primary w-full'
+                            disabled={isSigningUp}
+                        >
+                            {isSigningUp ? (
+                                <>
+                                    <Loader2 className='size-5 animate-spin' />
+                                    Loading...
+                                </>
+                            ) : (
+                                "Create Account"
+                            )}
+                        </button>
                     </form>
-
-
+                    <div className='text-center'>
+                        <p className='text-base-content/60'>
+                            Already have an account?{" "}
+                            <Link to="/login" className='link link-primary'>
+                                Sign in
+                            </Link>
+                        </p>
+                    </div>
                 </div>
             </div>
+
+            {/* Right Side */}
+            <AuthImagePattern
+                title="Join our community"
+                subtitle="Connect with friends, share moments, and stay in touch with yout loved ones."
+            />
         </div>
     )
 }
