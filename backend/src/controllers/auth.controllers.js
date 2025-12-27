@@ -139,7 +139,7 @@ export const logoutUser = (req, res) => {
     }
 }
 
-export const updateProfile = async () => {
+export const updateProfile = async (req, res) => {
     try {
         const { profilePicture } = req.body;
         const userId = req.user._id;
