@@ -68,7 +68,7 @@ const SignupPage = () => {
 
                                 <input
                                     type="text"
-                                    className="input input-bordered w-full pl-10 focus-visible:ring-0"
+                                    className="input input-bordered w-full pl-10 focus:outline-none focus:ring-0"
                                     placeholder="Eg.: Aman Parida"
                                     value={formData.fullname}
                                     onChange={(e) =>
@@ -91,7 +91,7 @@ const SignupPage = () => {
 
                                 <input
                                     type="email"
-                                    className="input input-bordered w-full pl-10 focus-visible:ring-0"
+                                    className="input input-bordered w-full pl-10 focus:outline-none focus:ring-0"
                                     placeholder="Eg.: aman@gmail.com"
                                     value={formData.email}
                                     onChange={(e) =>
@@ -114,7 +114,7 @@ const SignupPage = () => {
 
                                 <input
                                     type={showPassword ? "text" : "password"}
-                                    className="input input-bordered w-full pl-10 focus-visible:ring-0"
+                                    className="input input-bordered w-full pl-10 focus:outline-none focus:ring-0"
                                     placeholder="Eg.: xyz123"
                                     value={formData.password}
                                     onChange={(e) =>
