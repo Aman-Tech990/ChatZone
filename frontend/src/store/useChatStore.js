@@ -13,9 +13,9 @@ export const useChatStore = create((set) => ({
         set({ isUsersLoading: true });
         try {
             const res = await axiosInstance.get("/message/users");
-            if (res?.data?.successs) {
-                console.log(res.data);
-                set({ users: res.data?.users });
+            if (res?.data?.success) {
+                console.log("Users fetched:", res.data.users);
+                set({ users: res.data.users });
             }
         } catch (error) {
             console.log(error);
@@ -24,6 +24,7 @@ export const useChatStore = create((set) => ({
             set({ isUsersLoading: false });
         }
     },
+
 
     getMessages: async (userId) => {
         set({ isMessagesLoading: true });
@@ -40,5 +41,8 @@ export const useChatStore = create((set) => ({
             set({ isMessagesLoading: false });
         }
     },
+
+    // On hold (not completed!)
+    setSelectedUser: (selectedUser) => set({ selectedUser: selectedUser }),
 
 }));
