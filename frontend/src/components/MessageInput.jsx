@@ -11,7 +11,7 @@ const MessageInput = () => {
 
     const removeImage = () => { };
 
-    const handleSendMessage
+    const handleSendMessage = async (e) => { };
 
     return (
         <div>
