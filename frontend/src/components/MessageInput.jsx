@@ -14,8 +14,8 @@ const MessageInput = () => {
     const handleSendMessage = async (e) => { };
 
     return (
-        <div>
-
+        <div className="p-4 w-full">
+            
         </div>
     )
 }
