@@ -33,7 +33,6 @@ export const getMessages = async (req, res) => {
 
         return res.status(200).json({
             success: "true",
-            messages: `Successfully fetched messages!`,
             messages
         });
 
