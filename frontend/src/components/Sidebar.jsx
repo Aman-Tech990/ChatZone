@@ -62,7 +62,7 @@ const Sidebar = () => {
                             </div>
                         </div>
                     </button>
-                ))}
+                ))} 
 
             </div>
 
