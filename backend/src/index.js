@@ -20,7 +20,10 @@ const PORT = process.env.PORT || 5005;
 
 // CORS Setup
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: [
+        "http://localhost:5173",
+        "https://chatzone-henna.vercel.app"
+    ],
     credentials: true
 }));
 
