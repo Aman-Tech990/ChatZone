@@ -10,7 +10,6 @@ const io = new Server(server, {
         origin: [
             "https://chatzone-henna.vercel.app"
         ],
-        credentials: true,
     }
 });
 
