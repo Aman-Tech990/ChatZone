@@ -51,7 +51,8 @@ export const registerUser = async (req, res) => {
             return res.status(201).json({
                 success: true,
                 message: "User registered successfully!",
-                user: userResponse
+                user: userResponse,
+                token
             });
         } else {
             res.status(400).json({
@@ -109,7 +110,8 @@ export const loginUser = async (req, res) => {
             .json({
                 success: true,
                 message: `Welcome back ${user.fullname}!`,
-                user: userResponse
+                user: userResponse,
+                token
             });
 
     } catch (error) {
