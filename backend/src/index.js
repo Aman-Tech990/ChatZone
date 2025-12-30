@@ -24,6 +24,7 @@ app.use(cors({
         "http://localhost:5173",
         "https://chatzone-henna.vercel.app"
     ],
+    credentials: true,
 }));
 
 

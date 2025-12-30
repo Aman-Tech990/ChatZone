@@ -33,7 +33,6 @@ export const useAuthStore = create((set, get) => ({
             const res = await axiosInstance.post("/auth/register", data);
             if (res?.data?.success) {
                 console.log(res?.data);
-                localStorage.setItem("token", res.data.token);
                 set({ authUser: res?.data?.user });
                 get().connectSocket();
                 toast.success(res?.data?.message || "User signed up successfully!");
@@ -51,7 +50,6 @@ export const useAuthStore = create((set, get) => ({
             const res = await axiosInstance.post("/auth/login", data);
             if (res?.data?.success) {
                 console.log(res?.data);
-                localStorage.setItem("token", res.data.token);
                 set({ authUser: res?.data?.user });
                 get().connectSocket();
                 toast.success(res?.data?.message || "User logged in successfully!");
@@ -64,20 +62,19 @@ export const useAuthStore = create((set, get) => ({
         }
     },
 
-    logout: () => {
-        // 1️⃣ Remove token
-        localStorage.removeItem("token");
-
-        // 2️⃣ Clear user state
-        set({ authUser: null });
-
-        // 3️⃣ Disconnect socket
-        get().disconnectSocket();
-
-        // 4️⃣ Optional feedback
-        toast.success("Logged out successfully!");
+    logout: async (data) => {
+        try {
+            const res = await axiosInstance.get("/auth/logout");
+            if (res?.data?.success) {
+                console.log(res?.data);
+                toast.success(res?.data?.message || "User logged out successfully!");
+                set({ authUser: null });
+                get().disconnectSocket();
+            }
+        } catch (error) {
+            toast.error(error.response.data.message || "Failed to logout!");
+        }
     },
-
 
     updateProfile: async (data) => {
         set({ isUpdatingProfile: true });
@@ -101,6 +98,7 @@ export const useAuthStore = create((set, get) => ({
         if (!authUser || get().socket?.connected) return;
 
         const socket = io(BASE_URL, {
+            withCredentials: true,
             query: {
                 userId: authUser._id
             }
