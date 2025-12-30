@@ -27,6 +27,8 @@ app.use(cors({
     credentials: true
 }));
 
+app.set("trust proxy", 1);
+
 // Default Middlewares
 app.use(express.json({ limit: "100mb" }));
 app.use(cookieParser());
