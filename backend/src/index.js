@@ -24,10 +24,8 @@ app.use(cors({
         "http://localhost:5173",
         "https://chatzone-henna.vercel.app"
     ],
-    credentials: true
 }));
 
-app.set("trust proxy", 1);
 
 // Default Middlewares
 app.use(express.json({ limit: "100mb" }));
