@@ -52,7 +52,6 @@ export const registerUser = async (req, res) => {
                 success: true,
                 message: "User registered successfully!",
                 user: userResponse,
-                token
             });
         } else {
             res.status(400).json({
@@ -111,7 +110,6 @@ export const loginUser = async (req, res) => {
                 success: true,
                 message: `Welcome back ${user.fullname}!`,
                 user: userResponse,
-                token
             });
 
     } catch (error) {
