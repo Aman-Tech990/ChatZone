@@ -3,38 +3,42 @@ import { User } from "../models/users.model.js";
 
 const isAuthenticated = async (req, res, next) => {
     try {
-        const authHeader = req.headers.authorization;
+        const token = req.cookies.token;
 
-        // Expect: Authorization: Bearer <token>
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        if (!token) {
             return res.status(401).json({
                 success: false,
-                message: "Unauthorized User!",
+                message: "Unauthorized User!"
             });
         }
 
-        const token = authHeader.split(" ")[1];
+        const decode = jwt.verify(token, process.env.JWT_SECRET);
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        if (!decode) {
+            return res.status(404).json({
+                success: false,
+                message: "Unauthorized User!"
+            });
+        }
 
-        const user = await User.findById(decoded.userId).select("-password");
+        const user = await User.findById(decode.userId).select("-password");
 
         if (!user) {
             return res.status(404).json({
                 success: false,
-                message: "User not found!",
+                message: "User not found!"
             });
         }
-
         req.user = user;
         next();
+
     } catch (error) {
-        console.error("Auth Middleware Error:", error.message);
-        return res.status(401).json({
+        console.log("Middleware --> Server Issue \n", error);
+        return res.status(500).json({
             success: false,
-            message: "Invalid or expired token!",
+            message: "Middleware --> Internal Server Error!"
         });
     }
-};
+}
 
 export default isAuthenticated;
